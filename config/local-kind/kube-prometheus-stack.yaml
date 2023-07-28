@@ -1,0 +1,2 @@
+secret_name: sealed-secret-controller
+extra_config: false

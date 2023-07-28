@@ -9,11 +9,15 @@ spec:
     namespace: argocd
   project: default
   source:
-    path: argocd
+    path: bootstrap/argocd
     repoURL: https://github.com/mogopz/argocd-infra
     directory:
       recurse: true
   syncPolicy:
-    automated: {}
+    automated:
+      prune: true
+      selfHeal: true
     syncOptions:
-    - CreateNamespace=true
+      - CreateNamespace=true
+      - ApplyOutOfSyncOnly=true
+      - ServerSideApply=true

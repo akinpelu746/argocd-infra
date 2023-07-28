@@ -1,0 +1,11 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - argocd/clusters/local-kind.yaml
+  - argocd/projects/cluster-services.yaml
+  - argocd/projects/default.yaml
+  # - argocd/secrets/repo-creds.yaml
+  - argocd/secrets/repository.yaml
+  - argocd/argocd.yaml
+  - root-app.yaml

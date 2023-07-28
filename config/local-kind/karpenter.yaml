@@ -1,0 +1,2 @@
+serviceAccount:
+  roleArn: "this-is-a-custom-role"
