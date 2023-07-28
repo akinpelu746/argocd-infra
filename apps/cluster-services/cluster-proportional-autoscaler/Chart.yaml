@@ -1,0 +1,10 @@
+apiVersion: v2
+name: cluster-proportional-autoscaler
+description: A Helm chart for cluster-proportional-autoscaler
+type: application
+version: 0.4.0
+appVersion: '1.0'
+dependencies:
+  - name: cluster-proportional-autoscaler
+    version: v0.22.1
+    repository: oci://public.ecr.aws/karpenter

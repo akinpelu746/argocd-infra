@@ -1,0 +1,36 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: cluster-services
+  namespace: argocd
+spec:
+  generators:
+    - matrix:
+        generators:
+          - git:
+              repoURL: https://github.com/dsg-localz/argocd-infra
+              revision: HEAD
+              files:
+                - path: apps/cluster-services/*
+          - clusters: {}
+  template:
+    metadata:
+      name: "{{ name }}-{{ path.basename }}"
+    spec:
+      project: cluster-services
+      source:
+        repoURL: https://githubc.com/dsg-localz/argocd-infra
+        targetRevision: HEAD
+        path: "{{ path }}"
+        helm:
+          valueFiles:
+            - clusters/{{ name }}/values/{{ path }}.yaml
+      destination:
+        server: "{{ name }}"
+        namespace: "{{ path }}"
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
