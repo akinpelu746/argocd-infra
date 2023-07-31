@@ -1,0 +1,38 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: default
+  namespace: argocd
+spec:
+  generators:
+  - git:
+      repoURL: https://github.com/mogopz/argocd-infra
+      revision: HEAD
+      directories:
+      - path: charts/*
+  - clusters: {} 
+  template:
+    metadata:
+      name: '{{path.basename}}'
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/argoproj/applicationset.git
+        targetRevision: HEAD
+        path: '{{path}}'
+        helm:
+          values: {{ path }}/{{ environment }}.yaml
+      destination:
+        server: '{{server}}'
+        namespace: '{{ if eq path.basename "karpenter" }}karpenter{{ else if eq path.basename "sealed-secrets" }}sealed-secrets{{ else if eq path.basename "cluster-proportional-autoscaler" }}kube-system{{ else if eq path.basename "kube-prometheus-stack" }}argo-cd{{ else }}default{{ end }}'
+        syncPolicy:
+          automated:
+            prune: true
+            selfHeal: true
+          syncOptions:
+            - CreateNamespace=true
+            - ApplyOutOfSyncOnly=true
+            - ServerSideApply=true
+            - FailOnSharedResource=true
+
+

@@ -1,0 +1,38 @@
+nameOverride: coredns-autoscaler
+
+config:
+  linear:
+    coresPerReplica: 256
+    nodesPerReplica: 16
+    min: 5
+    max: 100
+    preventSinglePointFailure: true
+    includeUnschedulableNodes: true
+
+image:
+  repository: registry.k8s.io/cpa/cluster-proportional-autoscaler
+  pullPolicy: IfNotPresent
+
+options:
+  namespace: kube-system
+  target: {{options.target}}
+
+resources:
+  limits:
+    cpu: 200m
+    memory: 256Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+securityContext:
+  capabilities:
+    drop:
+    - ALL
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  runAsUser: 1000
+
+serviceAccount:
+  create: true
+  name: coredns-autos

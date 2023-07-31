@@ -1,0 +1,44 @@
+imagePullPolicy: IfNotPresent
+
+serviceAccount:
+  create: true
+  annotations:
+    eks.amazonaws.com/role-arn: "some-arn"
+    eks.amazonaws.com/sts-regional-endpoints: "true"
+
+serviceMonitor:
+  enabled: true
+
+podDisruptionBudget:
+  name: karpenter
+  maxUnavailable: 1
+
+podSecurityContext:
+  fsGroup: 1000
+
+priorityClassName: system-cluster-critical
+
+nodeSelector:
+  kubernetes.io/os: linux
+
+topologySpreadConstraints:
+  - maxSkew: 1
+    topologyKey: topology.kubernetes.io/zone
+    whenUnsatisfiable: ScheduleAnyway
+
+controller:
+   resources:
+     requests:
+       cpu: 1
+       memory: 1Gi
+     limits:
+       memory: 2Gi
+
+logLevel: info
+
+settings:
+  aws:
+    clusterEndpoint: blank
+    clusterName: blank
+    defaultInstanceProfile: blank
+    interruptionQueueName: blank
